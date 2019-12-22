@@ -1,4 +1,4 @@
-# game_ping_pong
+# Ping Pong
 
 # Pre-requisites
 This program would need Kivy library to be used. Follow the instructions available at the following location:
