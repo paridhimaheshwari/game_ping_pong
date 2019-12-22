@@ -21,8 +21,8 @@ Kivy library and object oriented programing is new to us. We started our learnin
 
 Following is achieved in the code so far:
 * Supports two players with moving bats for each player at the edge of the table
-+ Use 'W', 'S' to move the left side bat up and down.
-+ Use Down and Up arrow keys to move the right bat
+- Use 'W', 'S' to move the left side bat up and down.
+- Use Down and Up arrow keys to move the right bat
 
 * Pause and Start of the game
 * Scoring for the game
