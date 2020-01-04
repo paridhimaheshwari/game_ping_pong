@@ -1,5 +1,7 @@
 #:kivy 1.0.9
 
+<SplashScreen>:
+
 <PongBall>:
     size: 25, 25 
     canvas:
@@ -16,14 +18,14 @@
             size: 30, 100
 
 <PongGame>:
-    ball: pong_ball
+    pong_ball: pong_ball
     player1: player_x
     player2: player_y
     player1_score: player1_score_one
     player2_score: player2_score_two
     player1_name: player1_name
     player2_name: player2_name
-    
+    splash_screen: splash_screen
     canvas:
         Color: 
             rgb: [1,0,0]
@@ -32,9 +34,9 @@
             size: self.width, self.height
         Color: 
             rgb: [1,1,0]
-        Rectangle:
-            pos: self.center_x - 5, 0
-            size: 10, self.height
+#        Rectangle:
+#            pos: self.center_x - 5, 0
+#            size: 10, self.height
     Label:
         id: player1_score_one
         font_size: 70  
@@ -68,3 +70,9 @@
         id: player_x
     Player:
         id: player_y
+    Label:
+        id: splash_screen
+        text: 'Welcome to C-Hockey'
+        center_x: root.width / 2
+        top: root.top - 50
+        font_size: 70 

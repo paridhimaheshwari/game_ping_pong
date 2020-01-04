@@ -25,6 +25,7 @@ Following is achieved in the code so far:
 2. Use Down and Up arrow keys to move the right bat
 * Pause and Start of the game
 * Scoring for the game
+3. Capture name of the players
 
 # Features - Backlog
 
