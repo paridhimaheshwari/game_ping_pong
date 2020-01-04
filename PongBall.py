@@ -17,6 +17,5 @@ class PongBall(Widget):
  
     def move(self):
 #        print("Before...", self.pos[0], self.pos[1])
-        print("Position: ", *self.velocity)
         self.pos = Vector(*self.velocity) + self.pos
 #        print("After...", self.pos[0], self.pos[1])

@@ -26,7 +26,10 @@ class SplashScreen(Widget):
 # >>>>> Didn't understand, how come widget is appearing without any parent layout. Is Widget a layout?
 # 
 class PongGame(Widget):
+    MAX_SCORE = 2
+    flag_game_initialised = False
     pong_ball = ObjectProperty(None)
+    winning_player = None
     player1 = ObjectProperty(None)
     player2 = ObjectProperty(None)
     player1_score = ObjectProperty(None)
@@ -36,6 +39,8 @@ class PongGame(Widget):
     player2_name = ObjectProperty(None)
     player2_score_value = 0
     player_names_entered = False
+    winning_splash = ObjectProperty(None)
+    winning_splash_object = ObjectProperty(None)
     p1_name = "Paridhi"
     p2_name = "Aarushi"
     unInputForm = ObjectProperty(None)
@@ -48,8 +53,9 @@ class PongGame(Widget):
         super(PongGame, self).__init__(**kwargs)
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
-        self.clear_widgets(children = [self.player1_score, self.player2_score, self.player1_name, self.player2_name, self.player1, self.player2])
-        self.splash_timer = Clock.schedule_once(self.remove_splash, 3)   
+        self.winning_splash_object = self.winning_splash.__self__
+        self.clear_widgets(children = [self.player1_score, self.player2_score, self.player1_name, self.player2_name, self.player1, self.player2, self.winning_splash])
+        self.splash_timer = Clock.schedule_once(self.remove_splash, 3)
 
     def paintBoard(self):
         with self.canvas:
@@ -67,6 +73,7 @@ class PongGame(Widget):
         self.add_widget(self.player2_name)
         self.add_widget(self.player1)
         self.add_widget(self.player2)
+        self.flag_game_initialised = True
         self.askPlayerNames()
 
     def names_received(self, caller, names):
@@ -86,48 +93,27 @@ class PongGame(Widget):
         #TODO - Throw a error box
         print("Names not received")
 
+    def showWinningTeam(self):
+        self.winning_splash.text = self.winning_player + " Won C-Hockey"
+        self.add_widget(self.winning_splash)
+
     def askPlayerNames(self):
         self.unInputForm = UserNamesInputForm(self, self.names_received, self.names_not_received)
         self.add_widget(self.unInputForm)
-        if(0):
-            userNamesInput = BoxLayout(orientation = 'vertical')
-
-            userName1Input = BoxLayout(orientation = 'horizontal')
-            l = Label(text='Player 1', size_hint=(1.0, 1.0), halign="right", valign="middle")
-            l.bind(size=l.setter('text_size'))  
-            userName1Input.add_widget(l)
-            userName1Input.add_widget(TextInput(text='Hello World', multiline=False))
-            userNamesInput.add_widget(userName1Input)
-
-            userName2Input = BoxLayout(orientation = 'horizontal', size=(400,50))
-            l = Label(text='Player 2', halign="right", valign="middle")
-            l.bind(size=l.settballer('text_size'))  
-            userName2Input.add_widget(l)
-            userName2Input.add_widget(TextInput(text='Hello World', multiline=False))
-            userNamesInput.add_widget(userName2Input)
-            userNamesInput.pos = (self.x/2 ,self.height/2)
-            userNamesInput.size = (400, 80)
-            self.add_widget(userNamesInput)
-
         return
 
-    def serve_ball(self):
-        self.pong_ball.center = self.center
-        self.pong_ball.velocity = Vector(6, 0).rotate(randint(0, 360))
-        self.player1.center = Vector(0,350)
-        self.player2.center = Vector(800,300)
-        print("Serve", self.center[0], self.center[1])
-  
+    def resetGam(self):
+        return
+
     def update(self, dt):
-        print("Being called")
-
-
         # call ball.move and other stuff
         self.pong_ball.move()
         # Check if ball has touched the player 1
         if(not (self.pong_ball.center_y < self.player1.top and self.pong_ball.center_y > self.player1.y) and self.pong_ball.x < 0):
             self.player2_score_value += 1
             self.player2_score.text = str(self.player2_score_value)
+            if(self.player2_score_value >= self.MAX_SCORE):
+                self.winning_player = 'Player2'
             self.timer.cancel()
             self.timer_running = False
             self.serve_ball()
@@ -136,9 +122,15 @@ class PongGame(Widget):
         if(not (self.pong_ball.center_y < self.player2.top and self.pong_ball.center_y > self.player2.y) and self.pong_ball.right > self.width):
             self.player1_score_value += 1
             self.player1_score.text = str(self.player1_score_value)
+            if(self.player1_score_value >= self.MAX_SCORE):
+                self.winning_player = 'Player1'
             self.timer.cancel()
             self.timer_running = False
             self.serve_ball()
+
+        if(self.winning_player != None):
+            print("Game won by", self.winning_player)
+            self.showWinningTeam()
     
         # bounce off top and bottom
         if (self.pong_ball.y < 0) or (self.pong_ball.top > self.height):
@@ -156,8 +148,17 @@ class PongGame(Widget):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
         self._keyboard = None
 
+    def invokeUserNamesInput(self):
+            if(self.flag_game_initialised):
+                if(self.timer_running == False and self.player_names_entered == False):
+                    self.askPlayerNames()
+                elif(self.timer_running == False and self.winning_player == None):
+                    self.timer = Clock.schedule_interval(self.update, 1.0/60.0)
+                    self.timer_running = True
+
+
     def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
-        print("Flags are: ", self.timer_running, self.player_names_entered)
+        print("Flags are: ", self.timer_running, self.player_names_entered, self.winning_player, self.flag_game_initialised)
         if keycode[1] == 'w':
             self.player1.center_y += 20
             if(self.player1.top > self.height):
@@ -179,12 +180,19 @@ class PongGame(Widget):
         else:
             self.invokeUserNamesInput()
 
-    def invokeUserNamesInput(self):
-            if(self.timer_running == False and self.player_names_entered == False):
-                self.askPlayerNames()
-            elif(self.timer_running == False):
-                self.timer = Clock.schedule_interval(self.update, 1.0/60.0)
-                self.timer_running = True
+    def serve_ball(self):
+        self.pong_ball.center = self.center
+        angle = randint(0, 360-120)
+        print("Random integer: ", angle)
+        if(angle > 60):
+            angle+=60
+        if(angle > 240):
+            angle+=60
+        self.pong_ball.velocity = Vector(6, 0).rotate(angle)
+        self.player1.center = Vector(0,350)
+        self.player2.center = Vector(800,300)
+        print("Serve", self.center[0], self.center[1], angle)
+ 
 
 class PongApp(App):
     def load_kivy_files(self):
