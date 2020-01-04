@@ -14,38 +14,6 @@
         Rectangle:
             pos: self.pos
             size: 30, 100
-<Player1Name>
-    Label:
-        id: lbl_player1_name
-        font_size: 24  
-        center_x: root.width / 4
-        top: root.top - 100
-        text: "Player 1"
-
-    TextInput:
-        id: txt_player1_name
-
-<Player2Name>
-    Label:
-        id: lbl_player2_name
-        font_size: 24  
-        center_x: root.width / 4
-        top: root.top - 100
-        text: "Player 2"
-    TextInput:
-        id: txt_player2_name
-
-<Controls>
-    Button:
-        id: btn_save
-    Button:
-        id: btn_cancel
-
-<UserNamesInputForm>:
-    Player1Name:
-        id: player1_name_input
-    Player1Name:
-        id: player2_name_input
 
 <PongGame>:
     ball: pong_ball
@@ -53,6 +21,8 @@
     player2: player_y
     player1_score: player1_score_one
     player2_score: player2_score_two
+    player1_name: player1_name
+    player2_name: player2_name
     
     canvas:
         Color: 
@@ -65,13 +35,18 @@
         Rectangle:
             pos: self.center_x - 5, 0
             size: 10, self.height
-    
     Label:
         id: player1_score_one
         font_size: 70  
         center_x: root.width / 4
         top: root.top - 50
         text: "0"
+    Label:
+        id: player1_name
+        font_size: 30  
+        center_x: root.width / 4
+        top: root.top - 100
+        text: "xxxx"
         
     Label:
         id: player2_score_two
@@ -79,6 +54,12 @@
         center_x: root.width * 3 / 4
         top: root.top - 50
         text: "0"
+    Label:
+        id: player2_name
+        font_size: 30  
+        center_x: root.width * 3/ 4
+        top: root.top - 100
+        text: "xxxx"
     
     PongBall:
         id: pong_ball
@@ -87,4 +68,3 @@
         id: player_x
     Player:
         id: player_y
-        

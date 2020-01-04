@@ -13,6 +13,8 @@ from kivy.uix.label import Label
 import sys
 import PongBall
 import Player
+from UserNamesInputForm import UserNamesInputForm
+from kivy.lang import Builder 
 
 
 #PongGame is graphical widget, which is enhanced with our specific functions
@@ -26,9 +28,13 @@ class PongGame(Widget):
     player1_score = ObjectProperty(None)
     player2_score = ObjectProperty(None)
     player1_score_value = 0
+    player1_name = ObjectProperty(None)
+    player2_name = ObjectProperty(None)
     player2_score_value = 0
-    player1_name_entered = False
-    player2_name_entered = False
+    player_names_entered = False
+    p1_name = "Paridhi"
+    p2_name = "Aarushi"
+    unInputForm = ObjectProperty(None)
 
     timer_running = False
     timer = None
@@ -38,26 +44,46 @@ class PongGame(Widget):
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)    
 
+
+    def names_received(self, names):
+        print("Names received", names)
+        self.player1_name.text = names[0]
+        self.player2_name.text = names[1]
+        self.clear_widgets(children=[self.unInputForm])
+        self.player_names_entered = True
+
+        #TODO ideally this should not be re-installed
+        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+        self._keyboard.bind(on_key_down=self._on_keyboard_down)    
+        return
+
+    def names_not_received(self):
+        #TODO - Throw a error box
+        print("Names not received")
+
     def askPlayerNames(self):
-        userNamesInput = BoxLayout(orientation = 'vertical')
+        self.unInputForm = UserNamesInputForm(self.names_received, self.names_not_received)
+        self.add_widget(self.unInputForm)
+        if(0):
+            userNamesInput = BoxLayout(orientation = 'vertical')
 
-        userName1Input = BoxLayout(orientation = 'horizontal')
-        l = Label(text='Player 1', size_hint=(1.0, 1.0), halign="right", valign="middle")
-        l.bind(size=l.setter('text_size'))  
-        userName1Input.add_widget(l)
-        userName1Input.add_widget(TextInput(text='Hello World', multiline=False))
-        userNamesInput.add_widget(userName1Input)
+            userName1Input = BoxLayout(orientation = 'horizontal')
+            l = Label(text='Player 1', size_hint=(1.0, 1.0), halign="right", valign="middle")
+            l.bind(size=l.setter('text_size'))  
+            userName1Input.add_widget(l)
+            userName1Input.add_widget(TextInput(text='Hello World', multiline=False))
+            userNamesInput.add_widget(userName1Input)
 
-        userName2Input = BoxLayout(orientation = 'horizontal', size=(400,50))
-        l = Label(text='Player 2', halign="right", valign="middle")
-        l.bind(size=l.setter('text_size'))  
-        userName2Input.add_widget(l)
-        userName2Input.add_widget(TextInput(text='Hello World', multiline=False))
-        userNamesInput.add_widget(userName2Input)
-        userNamesInput.pos = (self.x/2 ,self.height/2)
-        userNamesInput.size = (400, 80)
-        self.add_widget(userNamesInput)
-        
+            userName2Input = BoxLayout(orientation = 'horizontal', size=(400,50))
+            l = Label(text='Player 2', halign="right", valign="middle")
+            l.bind(size=l.setter('text_size'))  
+            userName2Input.add_widget(l)
+            userName2Input.add_widget(TextInput(text='Hello World', multiline=False))
+            userNamesInput.add_widget(userName2Input)
+            userNamesInput.pos = (self.x/2 ,self.height/2)
+            userNamesInput.size = (400, 80)
+            self.add_widget(userNamesInput)
+
         return
 
     def serve_ball(self):
@@ -106,6 +132,7 @@ class PongGame(Widget):
         self._keyboard = None
 
     def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
+        print("Flags are: ", self.timer_running, self.player_names_entered)
         if keycode[1] == 'w':
             self.player1.center_y += 20
             if(self.player1.top > self.height):
@@ -125,7 +152,7 @@ class PongGame(Widget):
         elif keycode[1] == 'q' or keycode[1] == 'Q':
             sys.exit()
         else:
-            if(self.timer_running == False and self.player1_name_entered == False and self.player2_name_entered == False):
+            if(self.timer_running == False and self.player_names_entered == False):
                 self.askPlayerNames()
             elif(self.timer_running == False):
                 self.timer = Clock.schedule_interval(self.update, 1.0/60.0)
@@ -133,9 +160,13 @@ class PongGame(Widget):
 
 
 class PongApp(App):
+    def load_kivy_files(self):
+        Builder.load_file('usernames.kv')
+#        Builder.load_file('pong2.kv')
 
 #Note that build has to return a layout, which in this case is a widget. This can be boxlayout, relative layout etc
     def build(self):
+        self.load_kivy_files()
         game = PongGame()
         game.serve_ball()
 #        Clock.schedule_interval(game.update, 1.0/60.0)
