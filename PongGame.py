@@ -94,7 +94,7 @@ class PongGame(Widget):
         print("Names not received")
 
     def showWinningTeam(self):
-        self.winning_splash.text = self.winning_player + " Won C-Hockey"
+        self.winning_splash.text = self.winning_player + " Won"
         self.add_widget(self.winning_splash)
 
     def askPlayerNames(self):
