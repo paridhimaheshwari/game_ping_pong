@@ -52,6 +52,18 @@ Following is achieved in the code so far:
 
 # Some key programming challenges faced
 
+* How do we place the bat which would only result into bouncing else it will reset the game for next hit?
+* How do we mix keyboard input to start the game and quit?
+* How do we bring username dialog through the same kv file or make another kv file? and later how do we hide it?
+* Weaker references came quite often, while we clear the widgets
+* Missing out ```self``` during programming caused errors or faulty outputs
+* Lot of problem in getting the desired shape, colour and position of our widgets. We learnt a little but spent lot of time
+* Not allowing ball to go with less than 30 degree angle against vertical side. This used to slow down the game significantly
+* Pausing and Running timer, to run the game or do other things like
+ * Take user names
+ * Declare winner
+ * Pause after goal is scored
+
 # Some key concepts used but were not studied
 
 ## Kivy Graphics Framework
@@ -91,6 +103,16 @@ These classes can be imported from other python file into our main file just lik
 All variables are defined inside the class and are accessed within the methods using ```self.variable```. Same thing
 applies to methods invocation as well.
 
+## Passing functions as parameters for callbacks
+
+At one point, when we added a dialog box for player names, it was a struggle to find, how we pass the names received back
+into the main application. This was resolved by passing the function of the ```PongGame``` class into the
+ ```UserNamesInputForm``` class. This helped us to save the names received as well as clearing the widget from board.
+
+## Code split across more than one file
+
+Using basic functionality of import and classes, we could achieve this. This helped us to make our code little bit
+modular.
 
 ## Github to manage our code
 
@@ -106,12 +128,20 @@ where it can version our code. Following are the main commands, used by us:
 
 We could retrieve few times previous version of code, by using ```git checkout <hashcode of last commit>```
 
-## Code split across more than one file
-
-Using basic functionality of import and classes, we could achieve this. This helped us to make our code little bit
-modular.
 
 ## Packaging pythong code into executable
 
-## Passing functions as parameters for callbacks
+This was the most important part for project to make it shippable. We learnt this word 'Shippable'. It is good to have
+software working on our machine, versus, making it available for others to use. We found a utility, pyinstaller. Using
+our friend ```pip``` we installed this. This utility was used also for installing ```kivy``` framework.
+
+Following command was used to package it into one executable:
+
+```pyinstaller --onefile PongGame.py```
+
+Following this, it creates a folder dist, which contains the executable. To this folder we need to copy non-program files,
+which are important to run. These are: ```usernames.kv```, ```pong.kv```
+
+And here we go, run the program created in dist folder. Ensure kv files are co-located in same folder.
+
 
