@@ -13,9 +13,20 @@ It has been tested with Python 3.x version.
 * Aarushi Phulre
 
 # Credits
+
 Kivy library and object oriented programing is new to us. We started our learning from the tutorial available from:
+
 * [Pong Game Tutorial](https://kivy.org/doc/stable/tutorials/pong.html)
 
+Packaging instructions
+
+* [Making a Stand Alone Executable from a Python Script Using PyInstaller](https://dzone.com/articles/making-a-stand-alone-executable-from-a-python-scri)
+
+Learning Kivy
+
+* [Widget](https://kivy.org/doc/stable/api-kivy.uix.widget.html#kivy.uix.widget.Widget)
+* [Canvas](https://kivy.org/doc/stable/api-kivy.graphics.instructions.html)
+* [Kv Language](https://kivy.org/doc/stable/guide/lang.html)
 
 # Features - Available
 
@@ -87,6 +98,9 @@ Within widget, embedded objects can be accessed inside code through ID. This Id 
 be declared in the respective object, then referred in the top level of the widget, which is then
 referred in the code. All these variables should be initialised in the code using ObjectProperty(None)
 
+Widgets communicate back with program through events and callbacks. We used on_press call back to handle
+save player names from dialog box.
+
 
 ## Class based development
 
@@ -133,6 +147,7 @@ modular.
 * ```Clock``` for timers
 * ```Window``` for accessing keyboard
 * ```clear_widget, add_widget```
+* ```on_press``` to save name of players
 * Everything placed through kivy file is referred as widget. This is an atomic entity that can be played around
 through the program
 
