@@ -113,7 +113,7 @@ class PongGame(Widget):
             self.player2_score_value += 1
             self.player2_score.text = str(self.player2_score_value)
             if(self.player2_score_value >= self.MAX_SCORE):
-                self.winning_player = 'Player2'
+                self.winning_player = self.player2_name.text
             self.timer.cancel()
             self.timer_running = False
             self.serve_ball()
@@ -123,7 +123,7 @@ class PongGame(Widget):
             self.player1_score_value += 1
             self.player1_score.text = str(self.player1_score_value)
             if(self.player1_score_value >= self.MAX_SCORE):
-                self.winning_player = 'Player1'
+                self.winning_player = self.player1_name.text
             self.timer.cancel()
             self.timer_running = False
             self.serve_ball()
