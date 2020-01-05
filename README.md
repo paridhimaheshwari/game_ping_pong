@@ -48,6 +48,7 @@ Following is achieved in the code so far:
 * It does not give hint/instructions in the beginning on how to play
 * Visual of bat and the actual batting surface are different
 * It does not save history of scores
+* It does not support versioning of the application
 
 # Some key programming challenges faced
 
