@@ -114,6 +114,28 @@ into the main application. This was resolved by passing the function of the ```P
 Using basic functionality of import and classes, we could achieve this. This helped us to make our code little bit
 modular.
 
+## Key constructs used from python
+
+* ```class```
+* Logical operators
+* Methods
+* Variable definitions
+* ```import```
+* ```list```
+* ```tuple```
+
+## Key constructs used from kivy
+
+* ```kivy file``` for defining the layout of graphics objects
+* ```Label, Canvas, TextInput, Button, Rectangle,Widget``` for graphics and user interaction
+* ```ObjectProperty, ReferenceListProperty``` for initialisation
+* ```Vector``` for motion of ball
+* ```Clock``` for timers
+* ```Window``` for accessing keyboard
+* ```clear_widget, add_widget```
+* Everything placed through kivy file is referred as widget. This is an atomic entity that can be played around
+through the program
+
 ## Github to manage our code
 
 We ran into issues of losing the working code while experimenting with various things. Here we learnt few basics of git,
@@ -129,7 +151,7 @@ where it can version our code. Following are the main commands, used by us:
 We could retrieve few times previous version of code, by using ```git checkout <hashcode of last commit>```
 
 
-## Packaging pythong code into executable
+## Packaging python code into executable
 
 This was the most important part for project to make it shippable. We learnt this word 'Shippable'. It is good to have
 software working on our machine, versus, making it available for others to use. We found a utility, pyinstaller. Using
@@ -143,5 +165,6 @@ Following this, it creates a folder dist, which contains the executable. To this
 which are important to run. These are: ```usernames.kv```, ```pong.kv```
 
 And here we go, run the program created in dist folder. Ensure kv files are co-located in same folder.
+
 
 
