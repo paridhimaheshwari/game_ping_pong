@@ -232,3 +232,13 @@ MAX_SCORE = 2
     timer_running = False
     timer = None
 ```
+
+# Navigate to other items
+<ul>
+    {% for doc in site.pages %}
+      {% if doc.category == "code-walkthrough" and doc.url != page.url%}
+        <li><a class="page-link" href="{{site.url}}{{site.baseurl}}{{doc.url}}">{{ doc.title }}</a></li>
+
+      {% endif %}
+    {% endfor %}
+</ul>

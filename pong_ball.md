@@ -63,3 +63,13 @@ Other method ```cb_names_not_received``` is not used.
 # Player.py
 
 This is only to instantiate object and used by kivy file to further extend.
+
+# Navigate to other items
+<ul>
+    {% for doc in site.pages %}
+      {% if doc.category == "code-walkthrough" and doc.url != page.url%}
+        <li><a class="page-link" href="{{site.url}}{{site.baseurl}}{{doc.url}}">{{ doc.title }}</a></li>
+
+      {% endif %}
+    {% endfor %}
+</ul>

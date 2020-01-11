@@ -34,3 +34,13 @@ following widgets:
  + Controls Box
    - Button for save ```btn_save```
    - Button for cancel ```btn_cancel```
+
+# Navigate to other items
+<ul>
+    {% for doc in site.pages %}
+      {% if doc.category == "code-walkthrough" and doc.url != page.url%}
+        <li><a class="page-link" href="{{site.url}}{{site.baseurl}}{{doc.url}}">{{ doc.title }}</a></li>
+
+      {% endif %}
+    {% endfor %}
+</ul>
