@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Main App
+category: code-walkthrough
 ---
 
 # PongGame.py
