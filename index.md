@@ -22,7 +22,8 @@ There are following source code files in our code:
 <ul>
     {% for doc in site.pages %}
       {% if doc.category == "code-walkthrough" %}
-        <li><a href="{{ doc.url }}">{{ doc.title }}</a></li>
+        <li><a class="page-link" href="{{site.url}}{{site.baseurl}}{{doc.url}}">{{ doc.title }}</a></li>
+
       {% endif %}
     {% endfor %}
 </ul>
