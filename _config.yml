@@ -32,6 +32,16 @@ theme: minima
 plugins:
   - jekyll-feed
 
+exclude:
+   - game_ping_pong.zip
+   - Gemfile
+   - Gemfile.lock
+   - .sass-cache/
+   - .jekyll-cache/
+   - dist
+   - build
+   - PongGame.spec
+   - LICENSE
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to
