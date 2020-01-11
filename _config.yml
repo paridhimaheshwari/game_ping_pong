@@ -24,8 +24,8 @@ description: >- # this means to ignore newlines until "baseurl:"
  Capturing my understanding on the source for the ping pong (Air Hockey game)
 baseurl: "/game_ping_pong" # the subpath of your site, e.g. /blog
 #url: "" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: jekyllrb
-github_username:  jekyll
+twitter_username: NA
+github_username:  paridhimaheshwari
 
 # Build settings
 theme: minima
