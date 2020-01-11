@@ -22,7 +22,7 @@ title: My First Computer Group Project
 email: priti.paridhi@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
  Capturing my understanding on the source for the ping pong (Air Hockey game)
-#baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "/game_ping_pong" # the subpath of your site, e.g. /blog
 #url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: jekyllrb
 github_username:  jekyll
