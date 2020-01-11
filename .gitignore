@@ -26,10 +26,6 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-_site
-*.lock
-.sass-cache
-*.zip
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -131,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+_site
+*.lock
+.sass-cache
+*.zip
+.jekyll-cache
+
