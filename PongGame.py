@@ -26,7 +26,7 @@ class SplashScreen(Widget):
 # >>>>> Didn't understand, how come widget is appearing without any parent layout. Is Widget a layout?
 # 
 class PongGame(Widget):
-    MAX_SCORE = 2
+    MAX_SCORE = 5
     flag_game_initialised = False
     pong_ball = ObjectProperty(None)
     winning_player = None
