@@ -2,10 +2,10 @@
     p1_name: p1_name
     p2_name: p2_name
     pos: root.width / 2 - 200, root.height / 2 + 50
-    size: 400, 100
+    size: 400, 150
     BoxLayout:
         orientation: 'vertical'
-        size: 400, 100
+        size: 400, 150
         canvas:
             Color: 
                 rgb: [.5,.25,0]
@@ -17,19 +17,19 @@
             orientation: 'horizontal'
             Label:
                 text: "Player 1"
-                size_hint:1.0, 1.0
+                size_hint:.4, 1.0
             TextInput:
                 id: p1_name
-                size_hint:1.0, 1.0
+                size_hint:.6, 1.0
         BoxLayout:
             orientation: 'horizontal'
             Label:
                 id: lbl_name
                 text: "Player 2"
-                size_hint:1.0, 1.0
+                size_hint:.4, 1.0
             TextInput:
                 id: p2_name
-                size_hint:1.0, 1.0
+                size_hint:.6, 1.0
 
         BoxLayout:
             Button:
