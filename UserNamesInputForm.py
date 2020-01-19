@@ -5,7 +5,7 @@ from kivy.properties import (
 from kivy.vector import Vector
 from kivy.uix.boxlayout import BoxLayout
 
-class UserNamesInputForm(Widget):
+class UserNamesInputForm(BoxLayout):
     p1_name = ObjectProperty(None)
     p2_name = ObjectProperty(None)
     cb_names_received = None
