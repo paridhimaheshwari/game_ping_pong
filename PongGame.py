@@ -99,8 +99,13 @@ class PongGame(Widget):
 
     def askPlayerNames(self):
         self.unInputForm = UserNamesInputForm(self, self.names_received, self.names_not_received)
+        self.unInputForm.pos = self.width / 2 - 200, self.height / 2 + 50
+        self.bind(size=self.reposition_un, pos=self.reposition_un)
         self.add_widget(self.unInputForm)
         return
+   def reposition_un(self, root, args) :
+        self.unInputForm.pos = root.width / 2 - 200, root.top + 50
+        print('Got repositioned')
 
     def resetGam(self):
         return
