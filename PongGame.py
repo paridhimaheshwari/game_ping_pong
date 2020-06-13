@@ -16,6 +16,7 @@ import Player
 from UserNamesInputForm import UserNamesInputForm
 from kivy.lang import Builder
 from kivy.graphics import Rectangle
+import pongsql
 
 class SplashScreen(Widget):
     def dummy():
@@ -26,7 +27,7 @@ class SplashScreen(Widget):
 # >>>>> Didn't understand, how come widget is appearing without any parent layout. Is Widget a layout?
 # 
 class PongGame(Widget):
-    MAX_SCORE = 5
+    MAX_SCORE = 3
     flag_game_initialised = False
     pong_ball = ObjectProperty(None)
     winning_player = None
@@ -40,11 +41,17 @@ class PongGame(Widget):
     player2_score_value = 0
     player_names_entered = False
     winning_splash = ObjectProperty(None)
+    winning_score = ObjectProperty(None)
+    winning_player_id = None
     winning_splash_object = ObjectProperty(None)
+    winning_score_object = ObjectProperty(None)
     p1_name = "Paridhi"
     p2_name = "Aarushi"
     unInputForm = ObjectProperty(None)
     splash_screen = ObjectProperty(None)
+    playerid1 = None
+    playerid2 = None
+    gameid = None
 
     timer_running = False
     timer = None
@@ -54,16 +61,23 @@ class PongGame(Widget):
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
         self.winning_splash_object = self.winning_splash.__self__
-        self.clear_widgets(children = [self.player1_score, self.player2_score, self.player1_name, self.player2_name, self.player1, self.player2, self.winning_splash])
+        self.winning_score_object = self.winning_score.__self__
+
+        self.clear_widgets(children = [self.player1_score, 
+                                       self.player2_score, self.player1_name, 
+                                       self.player2_name, self.player1, 
+                                       self.player2, self.winning_splash, 
+                                       self.winning_score])
         self.splash_timer = Clock.schedule_once(self.remove_splash, 3)
 
     def paintBoard(self):
         with self.canvas:
-            Rectangle(source='mylogo.png', pos=(self.center_x - 5, 0), size=(10, self.height))
+            Rectangle(source='mylogo.png', pos=(self.center_x - 5, 0), 
+                      size=(10, self.height))
         return
 
     def remove_splash(self, dt):
-        self.clear_widgets(children = [self.splash_screen])
+        self.clear_widgets(children =[self.splash_screen])
         self.paintBoard()
 
 #        self.add_widget(self.pong_ball)
@@ -77,16 +91,28 @@ class PongGame(Widget):
         self.askPlayerNames()
 
     def names_received(self, caller, names):
+        
         print("Names received", names)
 #        self.paintBoard()
         self.player1_name.text = names[0]
         self.player2_name.text = names[1]
+        if(self.player1_name.text != ''):
+            self.playerid1 = pongsql.addNewPlayer(self.player1_name.text)
+        else:
+            print("You have not entered the name for player1")
+            sys.exit() 
+        if(self.player2_name.text != ''):
+            self.playerid2 = pongsql.addNewPlayer(self.player1_name.text)
+        else:
+            print("You have not entered the name for player2")
+            sys.exit() 
         self.clear_widgets(children=[self.unInputForm])
         self.player_names_entered = True
 
         #TODO ideally this should not be re-installed
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
-        self._keyboard.bind(on_key_down=self._on_keyboard_down)    
+        self._keyboard.bind(on_key_down=self._on_keyboard_down)  
+        self.gameid = pongsql.initiateGame(self.playerid1, self.playerid2)
         return
 
     def names_not_received(self):
@@ -96,6 +122,10 @@ class PongGame(Widget):
     def showWinningTeam(self):
         self.winning_splash.text = self.winning_player + " Won"
         self.add_widget(self.winning_splash)
+        wins = pongsql.findTotalWins(self.winning_player_id)
+        total = pongsql.findTotalGames(self.winning_player_id)
+        self.winning_score.text = "Wins: " + str(wins) + ". Games: " +  str(total)
+        self.add_widget(self.winning_score)
 
     def askPlayerNames(self):
         self.unInputForm = UserNamesInputForm(self, self.names_received, self.names_not_received)
@@ -103,7 +133,7 @@ class PongGame(Widget):
         self.bind(size=self.reposition_un, pos=self.reposition_un)
         self.add_widget(self.unInputForm)
         return
-   def reposition_un(self, root, args) :
+    def reposition_un(self, root, args) :
         self.unInputForm.pos = root.width / 2 - 200, root.top + 50
         print('Got repositioned')
 
@@ -116,9 +146,11 @@ class PongGame(Widget):
         # Check if ball has touched the player 1
         if(not (self.pong_ball.center_y < self.player1.top and self.pong_ball.center_y > self.player1.y) and self.pong_ball.x < 0):
             self.player2_score_value += 1
+            pongsql.updateWinCount(self.gameid, self.playerid2)
             self.player2_score.text = str(self.player2_score_value)
             if(self.player2_score_value >= self.MAX_SCORE):
                 self.winning_player = self.player2_name.text
+                self.winning_player_id = self.playerid2
             self.timer.cancel()
             self.timer_running = False
             self.serve_ball()
@@ -126,9 +158,11 @@ class PongGame(Widget):
        # Check if pong_ball has touched the player 2
         if(not (self.pong_ball.center_y < self.player2.top and self.pong_ball.center_y > self.player2.y) and self.pong_ball.right > self.width):
             self.player1_score_value += 1
+            pongsql.updateWinCount(self.gameid, self.playerid1)
             self.player1_score.text = str(self.player1_score_value)
             if(self.player1_score_value >= self.MAX_SCORE):
                 self.winning_player = self.player1_name.text
+                self.winning_player_id = self.playerid1
             self.timer.cancel()
             self.timer_running = False
             self.serve_ball()

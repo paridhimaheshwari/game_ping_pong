@@ -26,6 +26,7 @@
     player2_name: player2_name
     splash_screen: splash_screen
     winning_splash: winning_splash
+    winning_score: winning_score
     canvas:
         Color: 
             rgb: [1,0,0]
@@ -82,4 +83,11 @@
         center_x: root.width / 2
         top: root.top - 200
         font_size: 70
+        bcolor: 1, 1, 0, 1
+    Label:
+        id: winning_score
+        text: 'Wins: 0, Total: 0'
+        center_x: root.width / 2
+        top: root.top - 250
+        font_size: 40
         bcolor: 1, 1, 0, 1
