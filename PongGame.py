@@ -21,6 +21,9 @@ import pongsql
 class SplashScreen(Widget):
     def dummy():
         return
+class DeclareResults(Widget):
+    def dummy():
+        return
 
 #PongGame is graphical widget, which is enhanced with our specific functions
 # This looks for similar name in any of the kivy files, to initialize it's layout
@@ -31,6 +34,7 @@ class PongGame(Widget):
     flag_game_initialised = False
     pong_ball = ObjectProperty(None)
     winning_player = None
+    losing_player = None
     player1 = ObjectProperty(None)
     player2 = ObjectProperty(None)
     player1_score = ObjectProperty(None)
@@ -41,10 +45,15 @@ class PongGame(Widget):
     player2_score_value = 0
     player_names_entered = False
     winning_splash = ObjectProperty(None)
+    losing_splash = ObjectProperty(None)
     winning_score = ObjectProperty(None)
+    losing_score = ObjectProperty(None)
     winning_player_id = None
+    losing_player_id = None
     winning_splash_object = ObjectProperty(None)
     winning_score_object = ObjectProperty(None)
+    losing_splash_object = ObjectProperty(None)
+    losing_score_object = ObjectProperty(None)
     p1_name = "Paridhi"
     p2_name = "Aarushi"
     unInputForm = ObjectProperty(None)
@@ -62,17 +71,20 @@ class PongGame(Widget):
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
         self.winning_splash_object = self.winning_splash.__self__
         self.winning_score_object = self.winning_score.__self__
+        self.losing_splash_object = self.losing_splash.__self__
+        self.losing_score_object = self.losing_score.__self__
 
         self.clear_widgets(children = [self.player1_score, 
                                        self.player2_score, self.player1_name, 
-                                       self.player2_name, self.player1, 
-                                       self.player2, self.winning_splash, 
-                                       self.winning_score])
+                                       self.player2_name, 
+                                        self.winning_splash,self.losing_splash,
+                                        self.pong_ball,
+                                       self.winning_score, self.losing_score])
         self.splash_timer = Clock.schedule_once(self.remove_splash, 3)
 
     def paintBoard(self):
         with self.canvas:
-            Rectangle(source='mylogo.png', pos=(self.center_x - 5, 0), 
+            Rectangle(pos=(self.width/2 - 5, 0), 
                       size=(10, self.height))
         return
 
@@ -85,8 +97,11 @@ class PongGame(Widget):
         self.add_widget(self.player1_name)
         self.add_widget(self.player2_score)
         self.add_widget(self.player2_name)
-        self.add_widget(self.player1)
-        self.add_widget(self.player2)
+        self.add_widget(self.pong_ball)
+        self.pong_ball.center = self.center
+
+#        self.add_widget(self.player1)
+#        self.add_widget(self.player2)
         self.flag_game_initialised = True
         self.askPlayerNames()
 
@@ -98,11 +113,13 @@ class PongGame(Widget):
         self.player2_name.text = names[1]
         if(self.player1_name.text != ''):
             self.playerid1 = pongsql.addNewPlayer(self.player1_name.text)
+            print("Player Id1: ", self.playerid1)
         else:
             print("You have not entered the name for player1")
             sys.exit() 
         if(self.player2_name.text != ''):
-            self.playerid2 = pongsql.addNewPlayer(self.player1_name.text)
+            self.playerid2 = pongsql.addNewPlayer(self.player2_name.text)
+            print("Player Id2: ", self.playerid2)
         else:
             print("You have not entered the name for player2")
             sys.exit() 
@@ -121,11 +138,17 @@ class PongGame(Widget):
 
     def showWinningTeam(self):
         self.winning_splash.text = self.winning_player + " Won"
+        self.losing_splash.text = self.losing_player + " lost"
         self.add_widget(self.winning_splash)
+        self.add_widget(self.losing_splash)
         wins = pongsql.findTotalWins(self.winning_player_id)
         total = pongsql.findTotalGames(self.winning_player_id)
         self.winning_score.text = "Wins: " + str(wins) + ". Games: " +  str(total)
+        wins = pongsql.findTotalWins(self.losing_player_id)
+        total = pongsql.findTotalGames(self.losing_player_id)
+        self.losing_score.text = "Wins: " + str(wins) + ". Games: " +  str(total)
         self.add_widget(self.winning_score)
+        self.add_widget(self.losing_score)
 
     def askPlayerNames(self):
         self.unInputForm = UserNamesInputForm(self, self.names_received, self.names_not_received)
@@ -151,6 +174,8 @@ class PongGame(Widget):
             if(self.player2_score_value >= self.MAX_SCORE):
                 self.winning_player = self.player2_name.text
                 self.winning_player_id = self.playerid2
+                self.losing_player_id = self.playerid1
+                self.losing_player = self.player1_name.text
             self.timer.cancel()
             self.timer_running = False
             self.serve_ball()
@@ -163,6 +188,8 @@ class PongGame(Widget):
             if(self.player1_score_value >= self.MAX_SCORE):
                 self.winning_player = self.player1_name.text
                 self.winning_player_id = self.playerid1
+                self.losing_player_id = self.playerid2
+                self.losing_player = self.player2_name.text
             self.timer.cancel()
             self.timer_running = False
             self.serve_ball()
@@ -228,9 +255,10 @@ class PongGame(Widget):
         if(angle > 240):
             angle+=60
         self.pong_ball.velocity = Vector(6, 0).rotate(angle)
-        self.player1.center = Vector(0,350)
-        self.player2.center = Vector(800,300)
+#        self.player1.center = Vector(0,350)
+#        self.player2.center = self.center
         print("Serve", self.center[0], self.center[1], angle)
+        print("Player2: ", self.player2.center, self.width, self.right, self.height, self.top)
  
 
 class PongApp(App):
