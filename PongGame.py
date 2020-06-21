@@ -21,16 +21,23 @@ import pongsql
 class SplashScreen(Widget):
     def dummy():
         return
-class DeclareResults(Widget):
-    def dummy():
-        return
+#class DeclareResults(Widget):
+#    def dummy():
+        return    
+class DeclareResults(BoxLayout):
+    winning_splash1 = ObjectProperty(None)
+    losing_splash1 = ObjectProperty(None)
+    winning_score1 = ObjectProperty(None)
+    losing_score1 = ObjectProperty(None)
+    pass
+
 
 #PongGame is graphical widget, which is enhanced with our specific functions
 # This looks for similar name in any of the kivy files, to initialize it's layout
 # >>>>> Didn't understand, how come widget is appearing without any parent layout. Is Widget a layout?
 # 
 class PongGame(Widget):
-    MAX_SCORE = 3
+    MAX_SCORE = 1
     flag_game_initialised = False
     pong_ball = ObjectProperty(None)
     winning_player = None
@@ -61,6 +68,9 @@ class PongGame(Widget):
     playerid1 = None
     playerid2 = None
     gameid = None
+    declare_results = ObjectProperty(None)
+    declare_results_object = ObjectProperty(None)
+    
 
     timer_running = False
     timer = None
@@ -73,13 +83,15 @@ class PongGame(Widget):
         self.winning_score_object = self.winning_score.__self__
         self.losing_splash_object = self.losing_splash.__self__
         self.losing_score_object = self.losing_score.__self__
+        self.declare_results_object = self.declare_results.__self__
 
         self.clear_widgets(children = [self.player1_score, 
                                        self.player2_score, self.player1_name, 
                                        self.player2_name, 
                                         self.winning_splash,self.losing_splash,
                                         self.pong_ball,
-                                       self.winning_score, self.losing_score])
+                                       self.winning_score, self.losing_score,
+                                        self.declare_results])
         self.splash_timer = Clock.schedule_once(self.remove_splash, 3)
 
     def paintBoard(self):
@@ -137,18 +149,26 @@ class PongGame(Widget):
         print("Names not received")
 
     def showWinningTeam(self):
-        self.winning_splash.text = self.winning_player + " Won"
-        self.losing_splash.text = self.losing_player + " lost"
-        self.add_widget(self.winning_splash)
-        self.add_widget(self.losing_splash)
+#        self.winning_splash.text = self.winning_player + " Won"
+        self.declare_results.winning_splash1.text = self.winning_player + " Won"
+#        self.losing_splash.text = self.losing_player + " lost"
+        self.declare_results.losing_splash1.text = self.losing_player + " lost"
+#        self.add_widget(self.winning_splash)
+#        self.add_widget(self.losing_splash)
         wins = pongsql.findTotalWins(self.winning_player_id)
         total = pongsql.findTotalGames(self.winning_player_id)
-        self.winning_score.text = "Wins: " + str(wins) + ". Games: " +  str(total)
+        winning_text = "Wins: " + str(wins) + ". Games: " +  str(total)
+        self.winning_score.text = winning_text
+        self.declare_results.winning_score1.text = winning_text
+        
         wins = pongsql.findTotalWins(self.losing_player_id)
         total = pongsql.findTotalGames(self.losing_player_id)
-        self.losing_score.text = "Wins: " + str(wins) + ". Games: " +  str(total)
-        self.add_widget(self.winning_score)
-        self.add_widget(self.losing_score)
+        losing_text = "Wins: " + str(wins) + ". Games: " +  str(total)
+        self.losing_score.text = losing_text
+        self.declare_results.losing_score1.text = losing_text
+#        self.add_widget(self.winning_score)
+#        self.add_widget(self.losing_score)
+        self.add_widget(self.declare_results)
 
     def askPlayerNames(self):
         self.unInputForm = UserNamesInputForm(self, self.names_received, self.names_not_received)

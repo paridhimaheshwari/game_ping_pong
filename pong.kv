@@ -19,43 +19,53 @@
             pos: self.pos
             size: 30, 200
 
-<DeclareResults>:
+<DeclareResults@>:
     size: 600, 600
-    canvas:
-        Color:
-            rgb: [.9, .9, .4]
-        Rectangle:
-            pos: self.pos
-            size: 600, 600
-    Label:
-        id: winning_splash1
-        pos: self.parent.pos
-        text: 'Game over'
-        x: 10
-        top: self.parent.top - 10
-        font_size: 70
-    Label:
-        id: winning_score1
-        pos: self.parent.pos
-        text: 'Wins: 0, Total: 0'
-        x: self.width / 2
-        top: self.parent.top - 100
-        font_size: 40
-    Label:
-        id: losing_splash1
-        pos: self.parent.pos
-        text: 'Game over'       
-        x: self.width / 2
-        top: self.parent.top - 150
-        font_size: 70
-
-    Label:
-        id: losing_score1
-        pos: self.parent.pos
-        text: 'Wins: 0, Total: 0'
-        x: self.width / 2
-        top: self.parent.top - 200
-        font_size: 40
+    winning_splash1: winning_splash1
+    winning_score1:winning_score1
+    losing_splash1:losing_splash1
+    losing_score1:losing_score1
+    BoxLayout:
+        orientation: 'vertical'
+        canvas:
+            Color:
+                rgb: [.9, .9, .4]
+            Rectangle:
+                pos: self.pos
+                size: 600, 600
+        Label:
+            id: winning_splash1
+            pos: self.parent.pos
+            text: 'Game over'
+            color: 1, 0, 0, 1
+            x: 10
+            top: self.parent.top - 10
+            font_size: 70
+        Label:
+            id: winning_score1
+            pos: self.parent.pos
+            text: 'Wins: 0, Total: 0'
+            x: self.width / 2
+            top: self.parent.top - 100
+            font_size: 40
+            color: 1, 0, 0, 1
+        Label:
+            id: losing_splash1
+            pos: self.parent.pos
+            text: 'Game over'       
+            x: self.width / 2
+            top: self.parent.top - 150
+            font_size: 70
+            color: 1, 0, 0, 1
+    
+        Label:
+            id: losing_score1
+            pos: self.parent.pos
+            text: 'Wins: 0, Total: 0'
+            x: self.width / 2
+            top: self.parent.top - 200
+            font_size: 40
+            color: 1, 0, 0, 1
         
 <PongGame>:
     pong_ball: pong_ball
@@ -70,7 +80,7 @@
     winning_score: winning_score
     losing_splash: losing_splash
     losing_score: losing_score
-#    declare_results: declare_results
+    declare_results: declare_results
     
     canvas:
         Color: 
@@ -103,9 +113,9 @@
         center_x: root.width * 3/ 4
         top: root.top - 100
         text: "xxxx"
-#    DeclareResults:
-#        id: declare_results
-#        center: root.center
+    DeclareResults:
+        id: declare_results
+        center: root.center
         
     PongBall:
         id: pong_ball

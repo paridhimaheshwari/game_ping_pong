@@ -13,11 +13,52 @@ import mysql.connector
 
 mydb = None
 mycursor = None
+dbname = 'pong2'
+db_username = 'root'
+db_password = ''
 
 def connectToMysql():
   global mycursor, mydb
-  mydb = mysql.connector.connect(host='localhost', user='root', passwd='', database='pong')
+  mydb = mysql.connector.connect(host='localhost', user=db_username, passwd=db_password)
   mycursor = mydb.cursor()
+  
+def checkAndInitialiseDatabase():
+    global mycursor, mydb, dbname
+    mycursor.execute("SHOW DATABASES")
+    databases = mycursor.fetchall()
+    for database in databases:
+        if(dbname in database):
+            print("found pong database")
+            mycursor.execute("use "+dbname)
+            break
+    else:
+        print("Did not found my pong database. Creating one for using")
+        mycursor.execute("CREATE DATABASE "+dbname)
+        mycursor.execute("use "+dbname)
+    mydb.commit()
+        
+    ''' Create tables required to run the game '''
+    sql_create_players_table = """CREATE TABLE `players` (
+      `playerid` int(11) NOT NULL,
+      `playerName` char(20) NOT NULL,
+      PRIMARY KEY (`playerid`)
+    );"""
+    mycursor.execute(sql_create_players_table)    
+    
+    sql_create_games_table = """CREATE TABLE `games` (`gameid` int(11) NOT NULL,
+    `playerid1` int(11) DEFAULT NULL, 
+    `playerid2` int(11) DEFAULT NULL, 
+      `p1score` int(11) DEFAULT NULL, 
+      `p2score` int(11) DEFAULT NULL, 
+      PRIMARY KEY (`gameid`), 
+      KEY `fk_playerid` (`playerid1`), 
+      KEY `fk_playerid2` (`playerid2`), 
+      CONSTRAINT `fk_playerid` FOREIGN KEY (`playerid1`) REFERENCES `players` (`playerid`), 
+      CONSTRAINT `fk_playerid2` FOREIGN KEY (`playerid2`) REFERENCES `players` (`playerid`) 
+    );"""
+    mycursor.execute(sql_create_games_table)    
+
+    mydb.commit()
 
 def getAllResults():  
    global mycursor
@@ -97,6 +138,7 @@ def findTotalGames(playerId):
     return (games1[0] + games2[0])
     
 connectToMysql()
+checkAndInitialiseDatabase()
 '''
 print("All the games status before starting of")
 getAllResults()
